@@ -1,136 +1,166 @@
 "use client";
 
 import { motion } from "framer-motion";
-import SectionTitle from "./SectionTitle";
+import Image from "next/image";
 
-const events = [
-  { name: "Tropa do Gorilla Run", emoji: "🦍", color: "#D62828" },
-  { name: "Nexus Fight", emoji: "⚡", color: "#F77F00" },
-  { name: "Tardizinha do Cordeiro", emoji: "🌅", color: "#FCBF49" },
-  { name: "Roda de Samba", emoji: "🎵", color: "#D62828" },
-  { name: "Parrilla & Pagode", emoji: "🔥", color: "#F77F00" },
-  { name: "Pagodin na Pista", emoji: "🥩", color: "#FCBF49" },
+const partners = [
+  {
+    name: "Tropa dos Gorillas",
+    logo: "/events/gorillas.png",
+    emoji: "🦍",
+    color: "#F0A500",
+    desc: "Corrida de rua",
+  },
+  {
+    name: "Nexus Fight",
+    logo: "/events/nexus.png",
+    emoji: "⚡",
+    color: "#00CC44",
+    desc: "Artes marciais",
+  },
 ];
 
-const GalleryCard = ({
-  name,
-  emoji,
-  color,
-}: {
-  name: string;
-  emoji: string;
-  color: string;
-}) => (
-  <div
-    className="relative flex-shrink-0 w-[260px] md:w-[320px] h-[180px] md:h-[220px] rounded-2xl overflow-hidden mx-3 group cursor-default"
-    style={{
-      background: `linear-gradient(135deg, #1a0a0a 0%, #0d0505 100%)`,
-      border: `1px solid ${color}22`,
-    }}
-  >
-    {/* Glow no hover */}
-    <div
-      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-      style={{
-        background: `radial-gradient(ellipse 80% 80% at 50% 50%, ${color}20 0%, transparent 70%)`,
-      }}
-    />
+const marqueeItems = [
+  { text: "PARRILLA NA BRASA", icon: "🔥" },
+  { text: "SAMBA & PAGODE", icon: "🎵" },
+  { text: "CORDEIRO RECIFE", icon: "📍" },
+  { text: "ARTESANAL", icon: "✦" },
+  { text: "CARNE PREMIUM", icon: "🥩" },
+  { text: "TARDIZINHA", icon: "🌅" },
+  { text: "FOGO ALTO", icon: "💥" },
+  { text: "PAGODIN BURGUER", icon: "✦" },
+];
 
-    {/* Grain overlay */}
-    <div
-      className="absolute inset-0 opacity-[0.06]"
-      style={{
-        backgroundImage:
-          "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-      }}
-    />
+// Quadruplicado: dois conjuntos visíveis + dois para o loop contínuo sem gap
+const marqueeLoop = [...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems];
 
-    {/* Conteúdo */}
-    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-      <span className="text-5xl md:text-6xl group-hover:scale-110 transition-transform duration-300">
-        {emoji}
-      </span>
-      <div className="text-center px-4">
-        <p
-          className="font-bebas text-xl md:text-2xl tracking-widest"
-          style={{ color }}
-        >
-          {name}
-        </p>
-        <div
-          className="h-0.5 w-12 mx-auto mt-2 rounded-full"
-          style={{ background: color }}
-        />
-      </div>
-    </div>
-
-    {/* Borda inferior colorida */}
-    <div
-      className="absolute bottom-0 left-0 right-0 h-0.5 opacity-60"
-      style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }}
-    />
-  </div>
-);
-
-export default function GalleryMarquee() {
-  const doubled = [...events, ...events, ...events, ...events];
-
+function MarqueeTrack({ ariaHidden = false }: { ariaHidden?: boolean }) {
   return (
-    <section
-      className="relative py-24 md:py-32 overflow-hidden"
-      aria-label="Galeria — Na pista com a Pagodin"
+    <div
+      className="flex flex-shrink-0 animate-marquee-ltr"
+      style={{ width: "max-content" }}
+      aria-hidden={ariaHidden || undefined}
     >
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[#0d0505]" />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 40% at 50% 50%, rgba(214,40,40,0.06) 0%, transparent 60%)",
+      {marqueeLoop.map((item, i) => (
+        <span
+          key={i}
+          className="font-bebas text-sm tracking-widest text-[#0A0A0A] px-6 flex items-center gap-3 whitespace-nowrap"
+        >
+          <span aria-hidden="true">{item.icon}</span>
+          {item.text}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function PartnerCard({ partner }: { partner: typeof partners[0] }) {
+  return (
+    <motion.div
+      whileHover={{ y: -5, scale: 1.02 }}
+      transition={{ duration: 0.3 }}
+      className="flex flex-col items-center gap-5 p-8 rounded-2xl overflow-hidden cursor-default"
+      style={{
+        background: "linear-gradient(135deg, #1C1C1C 0%, #141414 100%)",
+        border: `1px solid ${partner.color}22`,
+        minWidth: 240,
+      }}
+    >
+      <div className="relative w-24 h-24 flex items-center justify-center">
+        <Image
+          src={partner.logo}
+          alt={`Logo ${partner.name}`}
+          width={96}
+          height={96}
+          className="object-contain w-full h-full"
+          onError={(e) => {
+            const img = e.target as HTMLImageElement;
+            img.style.display = "none";
+            const fallback = img.nextSibling as HTMLElement;
+            if (fallback) fallback.style.display = "flex";
           }}
         />
-      </div>
-
-      <div className="relative z-10">
-        <div className="max-w-7xl mx-auto px-6 mb-14">
-          <SectionTitle
-            tag="Galeria"
-            title="Na Pista com a"
-            highlight="Pagodin"
-            subtitle="Presença confirmada nos melhores eventos de Recife."
-            align="center"
-          />
-        </div>
-
-        {/* Marquee 1 — esquerda para direita */}
-        <div className="marquee-wrapper overflow-hidden">
-          <div className="flex animate-marquee" style={{ width: "max-content" }}>
-            {doubled.map((event, i) => (
-              <GalleryCard key={`${event.name}-${i}`} {...event} />
-            ))}
-          </div>
-        </div>
-
-        {/* Marquee 2 — direita para esquerda */}
-        <div className="marquee-wrapper overflow-hidden mt-4">
-          <div
-            className="flex"
-            style={{
-              width: "max-content",
-              animation: "marquee 32s linear infinite reverse",
-            }}
-          >
-            {[...doubled].reverse().map((event, i) => (
-              <GalleryCard key={`rev-${event.name}-${i}`} {...event} />
-            ))}
-          </div>
+        <div className="hidden w-full h-full items-center justify-center text-5xl" aria-hidden="true">
+          {partner.emoji}
         </div>
       </div>
 
-      {/* Gradients laterais para fade */}
-      <div className="absolute inset-y-0 left-0 w-24 z-10 pointer-events-none bg-gradient-to-r from-[#0d0505] to-transparent" />
-      <div className="absolute inset-y-0 right-0 w-24 z-10 pointer-events-none bg-gradient-to-l from-[#0d0505] to-transparent" />
+      <div className="text-center">
+        <p className="font-bebas text-xl tracking-widest" style={{ color: partner.color }}>
+          {partner.name}
+        </p>
+        <p className="font-inter text-[11px] text-[#F0E8D0]/40 mt-0.5 tracking-widest uppercase">
+          {partner.desc}
+        </p>
+      </div>
+
+      <div
+        className="px-3 py-1 rounded text-[10px] font-inter tracking-widest uppercase"
+        style={{
+          background: `${partner.color}18`,
+          border: `1px solid ${partner.color}35`,
+          color: partner.color,
+        }}
+      >
+        Parceiro Oficial
+      </div>
+    </motion.div>
+  );
+}
+
+export default function GalleryMarquee() {
+  return (
+    <section
+      className="relative overflow-hidden"
+      style={{ background: "#0D0D0D", padding: "5rem 0 0" }}
+      aria-label="Parceiros e presença na cena de Recife"
+    >
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(204,51,0,0.07) 0%, transparent 60%)",
+        }}
+      />
+
+      <div className="container relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.7 }}
+          className="flex flex-col items-center text-center gap-3 mb-14"
+        >
+          <span className="font-inter text-xs tracking-[0.25em] uppercase text-[#F0A500]">
+            Na Roda com a Pagodin
+          </span>
+          <h2 className="font-bebas text-[clamp(2.5rem,7vw,5rem)] leading-none text-[#F0E8D0]">
+            PARCEIROS <span className="text-amber">DA CENA</span>
+          </h2>
+          <p className="font-body text-sm text-[#F0E8D0]/40 font-light max-w-md">
+            Presença confirmada nos melhores eventos de Recife.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="flex flex-col sm:flex-row gap-5 justify-center items-center sm:items-stretch"
+        >
+          {partners.map((p) => (
+            <PartnerCard key={p.name} partner={p} />
+          ))}
+        </motion.div>
+      </div>
+
+      <div className="mt-16 overflow-hidden bg-[#F0A500] py-3">
+        <div className="marquee-wrap flex" aria-label="Palavras-chave da marca">
+          <MarqueeTrack />
+          <MarqueeTrack ariaHidden />
+        </div>
+      </div>
     </section>
   );
 }

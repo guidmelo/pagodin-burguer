@@ -2,197 +2,220 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { ChevronDown } from "lucide-react";
-import AnimatedButton from "./AnimatedButton";
+import Image from "next/image";
+import { WA_LINK } from "@/lib/constants";
 
 export default function HeroSection() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const burgerY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   return (
     <section
       ref={ref}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      aria-label="Hero — Pagodin Burguer"
+      className="relative min-h-screen flex items-center overflow-hidden"
+      aria-label="Pagodin Burguer — Onde o Samba encontra a Brasa"
     >
-      {/* Background com gradiente animado */}
-      <motion.div
-        style={{ y }}
-        className="absolute inset-0 z-0"
-      >
-        {/* Camada de fundo */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0B0B0B] via-[#1a0a0a] to-[#0B0B0B]" />
+      {/* Background base */}
+      <div className="absolute inset-0 z-0 bg-[#0A0A0A]" />
 
-        {/* Glow central — brasa */}
-        <div
-          className="absolute inset-0 animate-gradient"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 60% at 50% 70%, rgba(214,40,40,0.25) 0%, rgba(247,127,0,0.12) 40%, transparent 70%)",
-          }}
-        />
+      {/* Glow de brasa inferior esquerdo — como fogo no chão */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-[40%] z-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 100% 80% at 30% 100%, rgba(204,51,0,0.22) 0%, rgba(240,165,0,0.08) 50%, transparent 70%)",
+        }}
+      />
 
-        {/* Glow lateral esquerdo */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 50% 80% at 0% 100%, rgba(166,27,27,0.2) 0%, transparent 60%)",
-          }}
-        />
+      {/* Grade diagonal sutil — textura de grelha */}
+      <div
+        className="absolute inset-0 z-0 opacity-[0.025]"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(-45deg, #F0A500 0px, #F0A500 1px, transparent 1px, transparent 48px)",
+        }}
+      />
 
-        {/* Grade diagonal sutil */}
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(45deg, #F77F00 0px, #F77F00 1px, transparent 1px, transparent 60px)",
-          }}
-        />
-      </motion.div>
+      {/* Conteúdo */}
+      <div className="container relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 pt-24 lg:pt-0 min-h-screen lg:min-h-0 py-20">
 
-      {/* Partículas de brasa simuladas */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        {[...Array(12)].map((_, i) => (
+        {/* Lado esquerdo — texto + CTAs */}
+        <motion.div
+          style={{ y: textY, opacity }}
+          className="flex flex-col items-start gap-6 flex-1 max-w-xl"
+        >
+          {/* Logo */}
           <motion.div
-            key={i}
-            className="absolute rounded-full"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+          >
+            <Image
+              src="/logo.png"
+              alt="Pa'godin Parrilla Burguer"
+              width={110}
+              height={110}
+              className="rounded-full"
+              style={{ filter: "drop-shadow(0 0 20px rgba(240,165,0,0.5))" }}
+              priority
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
+          </motion.div>
+
+          {/* Headline */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <h1 className="font-bebas leading-none">
+              <span
+                className="block text-[clamp(3.5rem,9vw,7.5rem)] text-[#F0E8D0]"
+                style={{ textShadow: "0 2px 0 rgba(0,0,0,0.8)" }}
+              >
+                ONDE O SAMBA
+              </span>
+              <span
+                className="block text-[clamp(3.5rem,9vw,7.5rem)]"
+                style={{
+                  background: "linear-gradient(135deg, #F0A500 0%, #FCBF49 45%, #E84000 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  textShadow: "none",
+                  filter: "drop-shadow(0 0 20px rgba(240,165,0,0.4))",
+                }}
+              >
+                ENCONTRA
+              </span>
+              <span
+                className="block text-[clamp(3.5rem,9vw,7.5rem)] text-[#F0E8D0]"
+                style={{ textShadow: "0 2px 0 rgba(0,0,0,0.8)" }}
+              >
+                A BRASA.
+              </span>
+            </h1>
+          </motion.div>
+
+          {/* Subtítulo */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.55 }}
+            className="font-body text-[clamp(0.95rem,2vw,1.15rem)] text-[#F0E8D0]/60 font-light leading-relaxed max-w-md"
+          >
+            Hambúrguer artesanal na parrilla com{" "}
+            <span className="text-[#F0A500] font-medium not-italic">alma brasileira.</span>
+            {" "}No Cordeiro, Recife.
+          </motion.p>
+
+          {/* Horário */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="flex items-center gap-3"
+          >
+            <div className="w-2 h-2 rounded-full bg-[#F0A500] animate-ember" />
+            <span className="font-inter text-xs text-[#F0E8D0]/45 tracking-widest uppercase">
+              Qui – Dom &nbsp;·&nbsp; 18h às 23h &nbsp;·&nbsp; Cordeiro, Recife
+            </span>
+          </motion.div>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.85 }}
+            className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto"
+          >
+            <motion.a
+              href={WA_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Pedir agora via WhatsApp"
+              className="btn-primary animate-fire-glow text-center"
+              whileHover={{ scale: 1.03, y: -3 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              🔥 PEDIR AGORA
+            </motion.a>
+            <motion.a
+              href="#cardapio"
+              aria-label="Ver cardápio"
+              className="btn-outline text-center"
+              whileHover={{ scale: 1.03, y: -3 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              VER CARDÁPIO
+            </motion.a>
+          </motion.div>
+        </motion.div>
+
+        {/* Lado direito — burguer herói */}
+        <motion.div
+          style={{ y: burgerY, opacity }}
+          className="relative flex-1 flex items-center justify-center lg:justify-end"
+        >
+          {/* Glow por baixo do burger */}
+          <div
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[380px] h-[180px] pointer-events-none"
             style={{
-              width: Math.random() * 4 + 2,
-              height: Math.random() * 4 + 2,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              background: i % 2 === 0 ? "#F77F00" : "#FCBF49",
-            }}
-            animate={{
-              y: [0, -80, -160],
-              opacity: [0, 0.8, 0],
-              scale: [0.5, 1, 0.3],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 4,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: "easeOut",
+              background:
+                "radial-gradient(ellipse 80% 100% at 50% 100%, rgba(240,165,0,0.35) 0%, rgba(204,51,0,0.2) 40%, transparent 70%)",
+              filter: "blur(20px)",
             }}
           />
-        ))}
+
+          {/* Burger foto */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="animate-float-burger relative"
+            style={{ maxWidth: 520, width: "100%" }}
+          >
+            <Image
+              src="/burgers/image_2c904c.png"
+              alt="Burger artesanal na parrilla — Pagodin Burguer"
+              width={520}
+              height={480}
+              className="w-full h-auto object-contain"
+              style={{
+                filter:
+                  "drop-shadow(0 30px 60px rgba(204,51,0,0.5)) drop-shadow(0 0 40px rgba(240,165,0,0.3))",
+              }}
+              priority
+              onError={(e) => {
+                const t = e.target as HTMLImageElement;
+                t.src = "/burgers/image_2c908b.png";
+              }}
+            />
+          </motion.div>
+        </motion.div>
       </div>
-
-      {/* Conteúdo principal */}
-      <motion.div
-        style={{ opacity }}
-        className="relative z-10 flex flex-col items-center justify-center text-center px-6 max-w-4xl mx-auto"
-      >
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="glass-card rounded-full px-5 py-2 mb-8 inline-flex items-center gap-2"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#F77F00] animate-pulse" />
-          <span className="text-xs font-inter text-[#EAE2B7] tracking-widest uppercase">
-            Cordeiro · Recife · PE
-          </span>
-        </motion.div>
-
-        {/* Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-          className="font-bebas text-[clamp(3.5rem,12vw,9rem)] leading-none tracking-wide mb-4"
-          aria-label="Onde o Samba encontra a Brasa"
-        >
-          <span className="gradient-text text-glow-orange">Onde o Samba</span>
-          <br />
-          <span className="text-[#F5F5F5] text-glow-red">encontra a</span>
-          <br />
-          <span
-            className="gradient-text text-glow-orange"
-            style={{
-              background: "linear-gradient(135deg, #D62828 0%, #F77F00 50%, #FCBF49 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            Brasa.
-          </span>
-        </motion.h1>
-
-        {/* Subheadline */}
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.65 }}
-          className="font-poppins text-[clamp(1rem,3vw,1.3rem)] text-[#EAE2B7]/80 font-light mb-10 max-w-xl mx-auto leading-relaxed"
-        >
-          Hambúrguer artesanal na parrilla com{" "}
-          <span className="text-[#FCBF49] font-medium">alma brasileira.</span>
-        </motion.p>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.85 }}
-          className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-sm sm:max-w-none"
-        >
-          <AnimatedButton
-            href="https://api.whatsapp.com/message/LOLVWVWB6NLEN1?autoload=1&app_absent=0&utm_source=ig"
-            variant="primary"
-            size="lg"
-            className="animate-pulse-glow w-full sm:w-auto"
-            aria-label="Pedir agora via WhatsApp"
-          >
-            PEDIR AGORA
-          </AnimatedButton>
-
-          <AnimatedButton
-            href="#cardapio"
-            variant="outline"
-            size="lg"
-            className="w-full sm:w-auto"
-            aria-label="Ver cardápio"
-          >
-            VER CARDÁPIO
-          </AnimatedButton>
-        </motion.div>
-
-        {/* Horário */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.2 }}
-          className="mt-8 text-xs font-inter text-[#EAE2B7]/50 tracking-widest uppercase"
-        >
-          Qui – Dom &nbsp;·&nbsp; 18h às 23h
-        </motion.p>
-      </motion.div>
 
       {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+        transition={{ delay: 1.6 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
       >
-        <span className="text-[10px] font-inter text-[#EAE2B7]/40 tracking-widest uppercase">
-          scroll
-        </span>
         <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 1.6, repeat: Infinity }}
+          className="flex flex-col items-center gap-1"
         >
-          <ChevronDown size={20} className="text-[#F77F00]/60" />
+          <div className="w-0.5 h-8 rounded-full bg-gradient-to-b from-transparent via-[#F0A500] to-transparent" />
+          <div className="w-0.5 h-4 rounded-full bg-gradient-to-b from-[#F0A500] to-transparent opacity-50" />
         </motion.div>
       </motion.div>
 
-      {/* Gradiente de transição inferior */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 z-10 bg-gradient-to-t from-[#0B0B0B] to-transparent" />
+      {/* Fade bottom para próxima seção */}
+      <div className="absolute bottom-0 inset-x-0 h-32 z-10 bg-gradient-to-t from-[#0A0A0A] to-transparent pointer-events-none" />
     </section>
   );
 }

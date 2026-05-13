@@ -14,16 +14,16 @@ export default function BurgerImage({ src, alt, emoji = "🍔" }: BurgerImagePro
 
   if (error) {
     return (
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
         <motion.span
           className="text-7xl"
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
         >
           {emoji}
         </motion.span>
-        <span className="text-[10px] font-inter text-[#EAE2B7]/30 tracking-widest uppercase">
-          Foto em breve
+        <span className="font-inter text-[9px] text-[#F0E8D0]/25 tracking-widest uppercase">
+          foto em breve
         </span>
       </div>
     );
@@ -35,8 +35,10 @@ export default function BurgerImage({ src, alt, emoji = "🍔" }: BurgerImagePro
       src={src}
       alt={alt}
       onError={() => setError(true)}
-      className="absolute inset-0 w-full h-full object-contain p-4"
-      style={{ filter: "drop-shadow(0 10px 30px rgba(214,40,40,0.4))" }}
+      className="absolute inset-0 w-full h-full object-contain p-3"
+      style={{
+        filter: "drop-shadow(0 12px 32px rgba(204,51,0,0.45)) drop-shadow(0 0 20px rgba(240,165,0,0.2))",
+      }}
       loading="lazy"
     />
   );

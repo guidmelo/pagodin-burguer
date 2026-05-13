@@ -7,7 +7,7 @@ interface AnimatedButtonProps {
   href?: string;
   onClick?: () => void;
   children: ReactNode;
-  variant?: "primary" | "outline" | "ghost";
+  variant?: "primary" | "outline";
   size?: "sm" | "md" | "lg";
   className?: string;
   "aria-label"?: string;
@@ -24,36 +24,14 @@ export default function AnimatedButton({
   "aria-label": ariaLabel,
   fullWidth = false,
 }: AnimatedButtonProps) {
-  const sizeClasses = {
-    sm: "px-5 py-2.5 text-sm",
-    md: "px-7 py-3.5 text-sm",
-    lg: "px-8 py-4 text-base",
-  };
-
-  const variantClasses = {
-    primary:
-      "bg-gradient-to-r from-[#D62828] to-[#F77F00] text-white font-semibold rounded-full border-0 glow-red",
-    outline:
-      "glass-card text-[#EAE2B7] font-semibold rounded-full border border-[rgba(255,255,255,0.15)]",
-    ghost:
-      "bg-transparent text-[#F77F00] font-semibold rounded-full border border-[#F77F00]/30",
-  };
-
-  const baseClasses = `
-    inline-flex items-center justify-center gap-2
-    font-bebas tracking-widest uppercase
-    transition-all duration-300 cursor-pointer
-    btn-ripple select-none
-    ${sizeClasses[size]}
-    ${variantClasses[variant]}
-    ${fullWidth ? "w-full" : ""}
-    ${className}
-  `;
+  const cls = `${variant === "primary" ? "btn-primary" : "btn-outline"} ${
+    size === "sm" ? "text-sm py-2.5 px-6" : size === "lg" ? "text-base py-4 px-10" : ""
+  } ${fullWidth ? "w-full justify-center" : ""} ${className}`;
 
   const motionProps = {
-    whileHover: { scale: 1.04, y: -2 },
-    whileTap: { scale: 0.97 },
-    transition: { type: "spring" as const, stiffness: 400, damping: 20 },
+    whileHover: { scale: 1.03, y: -2 } as const,
+    whileTap: { scale: 0.97 } as const,
+    transition: { type: "spring" as const, stiffness: 380, damping: 22 },
   };
 
   if (href) {
@@ -63,7 +41,7 @@ export default function AnimatedButton({
         target={href.startsWith("http") ? "_blank" : undefined}
         rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
         aria-label={ariaLabel}
-        className={baseClasses}
+        className={cls}
         {...motionProps}
       >
         {children}
@@ -72,12 +50,7 @@ export default function AnimatedButton({
   }
 
   return (
-    <motion.button
-      onClick={onClick}
-      aria-label={ariaLabel}
-      className={baseClasses}
-      {...motionProps}
-    >
+    <motion.button onClick={onClick} aria-label={ariaLabel} className={cls} {...motionProps}>
       {children}
     </motion.button>
   );

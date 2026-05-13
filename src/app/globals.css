@@ -1,121 +1,227 @@
-@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Anton&family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Anton&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 
+/* ────────────────────────────────────────────────────────────
+   PAGODIN BURGUER — Sistema Visual de Parrilla
+   Filosofia: concreto, carvão, brasa, autêntico. Sem glassmorphism.
+   ──────────────────────────────────────────────────────────── */
+
 :root {
-  --coal: #0B0B0B;
-  --deep: #111111;
-  --red-brasa: #A61B1B;
-  --red-hot: #D62828;
-  --orange: #F77F00;
-  --yellow: #FCBF49;
-  --cream: #EAE2B7;
-  --light: #F5F5F5;
-  --glass: rgba(255,255,255,0.06);
-  --glass-border: rgba(255,255,255,0.10);
+  /* Paleta principal — extraída do logo Pa'godin */
+  --amber:        #F0A500;   /* dourado quente — tom primário do logo */
+  --amber-dark:   #C8860A;   /* âmbar escuro */
+  --fire:         #CC3300;   /* vermelho fogo */
+  --fire-bright:  #E84000;   /* fogo brilhante */
+  --coal:         #0A0A0A;   /* carvão profundo */
+  --smoke:        #141414;   /* fumaça escura */
+  --slate:        #1C1C1C;   /* ardósia */
+  --plate:        #222222;   /* chapa */
+  --cream:        #F0E8D0;   /* creme quente */
+  --ash:          #6B6B6B;   /* cinza carvão */
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  font-size: 16px;
 }
 
 body {
   background-color: var(--coal);
-  color: var(--light);
+  color: var(--cream);
   font-family: "Poppins", sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body::before {
+/* Grain cinematográfico — textura física */
+body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
   pointer-events: none;
-  z-index: 9999;
-  opacity: 0.35;
+  z-index: 9998;
+  opacity: 0.45;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.08'/%3E%3C/svg%3E");
 }
 
-::-webkit-scrollbar { width: 4px; }
+/* Scrollbar parrilla */
+::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(--coal); }
-::-webkit-scrollbar-thumb { background: var(--red-hot); border-radius: 2px; }
-::selection { background: var(--red-hot); color: var(--light); }
+::-webkit-scrollbar-thumb { background: var(--amber); border-radius: 2px; }
+::selection { background: var(--amber); color: var(--coal); }
 
-.font-bebas { font-family: "Bebas Neue", sans-serif; }
-.font-anton { font-family: "Anton", sans-serif; }
-.font-poppins { font-family: "Poppins", sans-serif; }
-.font-inter { font-family: "Inter", sans-serif; }
+/* ── Tipografia ── */
+.font-bebas  { font-family: "Bebas Neue", sans-serif; letter-spacing: 0.04em; }
+.font-anton  { font-family: "Anton", sans-serif; }
+.font-body   { font-family: "Poppins", sans-serif; }
+.font-inter  { font-family: "Inter", sans-serif; }
 
-.glass-card {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+/* ── Textos gradiente ── */
+.text-amber {
+  background: linear-gradient(135deg, var(--amber) 0%, #FCBF49 60%, var(--amber) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-
-.glow-red {
-  box-shadow: 0 0 30px rgba(214,40,40,0.4), 0 0 60px rgba(214,40,40,0.15);
-}
-.glow-orange {
-  box-shadow: 0 0 30px rgba(247,127,0,0.3), 0 0 60px rgba(247,127,0,0.1);
-}
-.text-glow-red {
-  text-shadow: 0 0 40px rgba(214,40,40,0.6), 0 0 80px rgba(214,40,40,0.3);
-}
-.text-glow-orange {
-  text-shadow: 0 0 40px rgba(247,127,0,0.5), 0 0 80px rgba(247,127,0,0.2);
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #F77F00 0%, #FCBF49 50%, #F77F00 100%);
+.text-fire {
+  background: linear-gradient(135deg, var(--fire-bright) 0%, var(--amber) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-14px); }
+/* ── Brasa glow ── */
+.glow-amber {
+  box-shadow: 0 0 24px rgba(240,165,0,0.5), 0 0 60px rgba(240,165,0,0.2);
 }
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(214,40,40,0.4); }
-  50% { box-shadow: 0 0 50px rgba(214,40,40,0.9), 0 0 90px rgba(247,127,0,0.35); }
+.glow-fire {
+  box-shadow: 0 0 24px rgba(204,51,0,0.5), 0 0 60px rgba(204,51,0,0.2);
 }
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+.text-glow-amber {
+  text-shadow: 0 0 30px rgba(240,165,0,0.6), 0 0 70px rgba(240,165,0,0.25);
 }
 
-.animate-float { animation: float 4s ease-in-out infinite; }
-.animate-pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
-.animate-marquee { animation: marquee 28s linear infinite; }
-.animate-gradient { animation: gradient-shift 5s ease infinite; background-size: 200% 200%; }
-
-.marquee-wrapper:hover .animate-marquee {
-  animation-play-state: paused;
+/* ── Backgrounds texturizados ── */
+.bg-concrete {
+  background-color: var(--slate);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
 }
 
-.btn-ripple {
+.bg-charcoal {
+  background-color: var(--smoke);
+  background-image: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(204,51,0,0.08) 0%, transparent 70%);
+}
+
+/* ── Cards de menu (ardósia / lousa) ── */
+.menu-card {
+  background: var(--slate);
+  border: 1px solid rgba(240,165,0,0.14);
   position: relative;
   overflow: hidden;
 }
-.btn-ripple::after {
+.menu-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--fire), var(--amber), var(--fire));
+}
+
+/* ── Botões ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, var(--fire) 0%, var(--amber) 100%);
+  color: var(--coal);
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(240,165,0,0.45);
+}
+.btn-primary::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.18) 0%, transparent 70%);
+  background: rgba(255,255,255,0.12);
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.25s;
 }
-.btn-ripple:hover::after { opacity: 1; }
+.btn-primary:hover::after { opacity: 1; }
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 32px;
+  background: transparent;
+  color: var(--cream);
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  border: 1.5px solid rgba(240,165,0,0.5);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.btn-outline:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: rgba(240,165,0,0.06);
+}
+
+/* ── Divisor de brasa ── */
+.divider-brasa {
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--fire) 20%, var(--amber) 50%, var(--fire) 80%, transparent 100%);
+  border: none;
+}
+
+/* ── Animações ── */
+@keyframes float-burger {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50% { transform: translateY(-18px) rotate(1deg); }
+}
+@keyframes ember-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+@keyframes marquee-ltr {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes marquee-rtl {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+@keyframes fire-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(240,165,0,0.4); }
+  50% { box-shadow: 0 0 50px rgba(240,165,0,0.85), 0 0 100px rgba(204,51,0,0.3); }
+}
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float-burger  { animation: float-burger 5s ease-in-out infinite; }
+.animate-ember         { animation: ember-pulse 2.5s ease-in-out infinite; }
+.animate-marquee-ltr   { animation: marquee-ltr 30s linear infinite; }
+.animate-marquee-rtl   { animation: marquee-rtl 35s linear infinite; }
+.animate-fire-glow     { animation: fire-glow 2.5s ease-in-out infinite; }
+
+/* Pause marquee on hover */
+.marquee-wrap:hover .animate-marquee-ltr,
+.marquee-wrap:hover .animate-marquee-rtl {
+  animation-play-state: paused;
+}
+
+/* ── Seção — padding padrão ── */
+.section { padding: 5rem 0; }
+@media (min-width: 768px) { .section { padding: 7rem 0; } }
+
+/* ── Container ── */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+@media (min-width: 640px) { .container { padding: 0 2rem; } }
