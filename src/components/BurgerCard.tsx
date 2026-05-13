@@ -1,110 +1,146 @@
 "use client";
 
 import { motion } from "framer-motion";
-import BurgerImage from "./BurgerImage";
+import { useState } from "react";
 import { WA_LINK } from "@/lib/constants";
 
 interface BurgerCardProps {
   name: string;
-  tagline: string;
-  description: string;
   ingredients: string[];
   imageSrc: string;
   emoji?: string;
   index: number;
   badge?: string;
+  isRight: boolean;
 }
 
 export default function BurgerCard({
   name,
-  tagline,
-  description,
   ingredients,
   imageSrc,
   emoji = "🍔",
   index,
   badge,
+  isRight,
 }: BurgerCardProps) {
-  const ingredientList = ingredients.join(" · ");
+  const [imgError, setImgError] = useState(false);
+  const num = String(index + 1).padStart(2, "0");
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.65, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] as const }}
-      whileHover={{ y: -5, boxShadow: "0 20px 60px rgba(240,165,0,0.15), 0 0 0 1px rgba(240,165,0,0.2)" }}
-      className="menu-card rounded-2xl flex flex-col group overflow-hidden"
+    <article
+      className={`relative flex flex-col overflow-hidden ${isRight ? "md:flex-row-reverse" : "md:flex-row"}`}
+      style={{ minHeight: "clamp(360px, 55vh, 580px)" }}
       aria-label={`Burger ${name}`}
     >
-      {badge && (
+      {/* Image side — always first in DOM → top on mobile */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.9, ease: "easeOut" }}
+        className="relative flex-1"
+        style={{ minHeight: 260 }}
+      >
+        {imgError ? (
+          <div className="absolute inset-0 flex items-center justify-center text-8xl select-none" aria-hidden="true">
+            {emoji}
+          </div>
+        ) : (
+          <img
+            src={imageSrc}
+            alt={name}
+            loading="lazy"
+            onError={() => setImgError(true)}
+            className="absolute inset-0 w-full h-full object-contain p-8 md:p-14"
+            style={{
+              filter:
+                "drop-shadow(0 16px 48px rgba(204,51,0,0.6)) drop-shadow(0 0 28px rgba(240,165,0,0.3))",
+            }}
+          />
+        )}
+
+        {/* Vignette — fades white photo background into page background */}
         <div
-          className="absolute top-4 right-4 z-20 px-2.5 py-1 rounded text-[10px] font-bebas tracking-widest"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: "rgba(240,165,0,0.15)",
-            border: "1px solid rgba(240,165,0,0.4)",
+            background:
+              "radial-gradient(ellipse 85% 85% at 50% 50%, transparent 38%, rgba(8,8,8,0.75) 72%, #080808 92%)",
+          }}
+        />
+      </motion.div>
+
+      {/* Text side */}
+      <motion.div
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.75, delay: 0.12, ease: "easeOut" }}
+        className="relative flex flex-1 flex-col justify-center overflow-hidden px-8 py-12 md:px-14 md:py-0"
+      >
+        {/* Number watermark */}
+        <span
+          aria-hidden="true"
+          className="absolute font-bebas select-none pointer-events-none"
+          style={{
+            fontSize: "clamp(8rem, 22vw, 20rem)",
+            opacity: 0.03,
             color: "#F0A500",
+            lineHeight: 1,
+            bottom: "-0.08em",
+            right: "-0.05em",
           }}
         >
-          {badge}
-        </div>
-      )}
+          {num}
+        </span>
 
-      <div
-        className="relative overflow-hidden"
-        style={{
-          height: 240,
-          background: "radial-gradient(ellipse 80% 60% at 50% 80%, rgba(204,51,0,0.18) 0%, #111111 60%)",
-        }}
-      >
-        <motion.div
-          className="absolute inset-0"
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.45, ease: "easeOut" }}
-        >
-          <BurgerImage src={imageSrc} alt={`Foto do ${name}`} emoji={emoji} />
-        </motion.div>
+        <div className="relative z-10 flex flex-col gap-5">
+          {badge && (
+            <span
+              className="font-inter text-[10px] tracking-[0.22em] uppercase px-3 py-1 self-start"
+              style={{
+                border: "1px solid rgba(240,165,0,0.35)",
+                color: "#F0A500",
+              }}
+            >
+              {badge}
+            </span>
+          )}
 
-        <div
-          className="absolute inset-x-0 bottom-0 h-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-          style={{ background: "linear-gradient(to top, rgba(240,165,0,0.2) 0%, transparent 100%)" }}
-        />
-      </div>
-
-      <div
-        className="flex flex-col flex-1 p-5 gap-4"
-        style={{
-          background: "linear-gradient(180deg, #1C1C1C 0%, #171717 100%)",
-          borderTop: "1px solid rgba(240,165,0,0.1)",
-        }}
-      >
-        <div>
-          <h3 className="font-bebas text-[clamp(1.7rem,4vw,2.3rem)] leading-none tracking-wide text-[#F0E8D0] group-hover:text-[#F0A500] transition-colors duration-300">
+          <h3
+            className="font-bebas text-[#F0E8D0] leading-none"
+            style={{ fontSize: "clamp(2.8rem, 6vw, 5.5rem)" }}
+          >
             {name}
           </h3>
-          <p className="font-body text-sm italic text-[#F0A500]/70 mt-1 font-light">
-            {tagline}
+
+          <div
+            className="h-px"
+            style={{
+              width: 48,
+              background: "linear-gradient(90deg, #F0A500, rgba(240,165,0,0.15))",
+            }}
+          />
+
+          <p
+            className="font-inter text-[#F0E8D0]/38 uppercase leading-relaxed"
+            style={{ fontSize: "0.62rem", letterSpacing: "0.2em" }}
+          >
+            {ingredients.join("  ·  ")}
           </p>
+
+          <motion.a
+            href={WA_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary self-start mt-2"
+            whileHover={{ scale: 1.03, y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            aria-label={`Pedir ${name} via WhatsApp`}
+          >
+            PEDIR AGORA
+          </motion.a>
         </div>
-
-        <div className="h-px bg-gradient-to-r from-[rgba(240,165,0,0.3)] to-transparent" />
-
-        <p className="font-body text-xs text-[#F0E8D0]/45 leading-relaxed font-light">
-          {ingredientList}
-        </p>
-
-        <motion.a
-          href={WA_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Pedir ${name} via WhatsApp`}
-          className="btn-primary mt-auto justify-center text-sm py-3"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-        >
-          PEDIR VIA WHATSAPP
-        </motion.a>
-      </div>
-    </motion.article>
+      </motion.div>
+    </article>
   );
 }

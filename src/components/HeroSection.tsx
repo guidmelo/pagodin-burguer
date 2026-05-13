@@ -99,30 +99,15 @@ export default function HeroSection() {
             </h1>
           </motion.div>
 
-          {/* Subtítulo */}
+          {/* Subtítulo mínimo */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.55 }}
-            className="font-body text-[clamp(0.95rem,2vw,1.15rem)] text-[#F0E8D0]/60 font-light leading-relaxed max-w-md"
+            transition={{ duration: 0.6, delay: 0.55 }}
+            className="font-inter text-xs text-[#F0E8D0]/45 tracking-[0.22em] uppercase"
           >
-            Hambúrguer artesanal na parrilla com{" "}
-            <span className="text-[#F0A500] font-medium not-italic">alma brasileira.</span>
-            {" "}No Cordeiro, Recife.
+            Parrilla a carvão &nbsp;·&nbsp; Cordeiro, Recife
           </motion.p>
-
-          {/* Horário */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="flex items-center gap-3"
-          >
-            <div className="w-2 h-2 rounded-full bg-[#F0A500] animate-ember" />
-            <span className="font-inter text-xs text-[#F0E8D0]/45 tracking-widest uppercase">
-              Qui – Dom &nbsp;·&nbsp; 18h às 23h &nbsp;·&nbsp; Cordeiro, Recife
-            </span>
-          </motion.div>
 
           {/* CTAs */}
           <motion.div
